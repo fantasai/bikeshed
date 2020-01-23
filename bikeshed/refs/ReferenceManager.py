@@ -22,7 +22,7 @@ class ReferenceManager(object):
 
     __slots__ = ["dataFile", "specs", "defaultSpecs", "ignoredSpecs", "replacedSpecs", "biblios", "loadedBiblioGroups",
         "biblioKeys", "biblioNumericSuffixes", "preferredBiblioNames", "headings", "defaultStatus", "localRefs", "anchorBlockRefs", "foreignRefs",
-        "shortname", "specLevel", "spec", "testing"]
+        "shortname", "specLevel", "spec", "isDelta", "testing"]
 
     def __init__(self, defaultStatus=None, fileRequester=None, testing=False):
         if fileRequester is None:
@@ -176,6 +176,7 @@ class ReferenceManager(object):
         self.shortname = md.shortname
         self.specLevel = md.level
         self.spec = md.vshortname
+        self.isDelta = md.deltaSpec
 
         for term, defaults in md.linkDefaults.items():
             for default in defaults:
@@ -363,6 +364,9 @@ class ReferenceManager(object):
         else:
             export = None
         refs, failure = self.foreignRefs.queryRefs(text=text, linkType=linkType, spec=spec, status=status, statusHint=statusHint, linkFor=linkFor, linkForHint=linkForHint, explicitFor=explicitFor, export=export, ignoreObsoletes=True)
+
+        if failure and self.isDelta:
+            refs, failure = self.foreignRefs.queryRefs(text=text, linkType=linkType, spec=self.shortname, status=status, statusHint=statusHint, linkFor=linkFor, linkForHint=linkForHint, explicitFor=explicitFor, export=False, ignoreObsoletes=True, latestOnly=False)
 
         if failure and linkType in ("argument", "idl") and linkFor is not None and any(x.endswith("()") for x in linkFor):
             # foo()/bar failed, because foo() is technically the wrong signature
