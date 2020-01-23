@@ -67,6 +67,7 @@ class MetadataManager:
         self.defaultHighlight = None
         self.defaultBiblioDisplay = "index"
         self.defaultRefStatus = None
+        self.deltaSpec = False
         self.displayShortname = None
         self.editors = []
         self.editorTerm = {"singular": "Editor", "plural": "Editors"}
@@ -1060,6 +1061,7 @@ knownKeys = {
     "Default Biblio Status": Metadata("Default Biblio Status", "defaultRefStatus", joinValue, parseRefStatus), #synonym of "Default Ref Status"
     "Default Highlight": Metadata("Default Highlight", "defaultHighlight", joinValue, parseLiteral),
     "Default Ref Status": Metadata("Default Ref Status", "defaultRefStatus", joinValue, parseRefStatus),
+    "Delta Spec": Metadata("Delta Spec", "deltaSpec", joinValue, parseBoolean),
     "ED": Metadata("ED", "ED", joinValue, parseLiteral),
     "Editor": Metadata("Editor", "editors", joinList, parseEditor),
     "Editor Term": Metadata("Editor Term", "editorTerm", joinValue, parseEditorTerm),
